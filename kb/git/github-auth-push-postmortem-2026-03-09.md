@@ -1,5 +1,12 @@
 # GitHub 认证问题复盘（Host key / publickey / 环境变量私钥）- 2026-03-09
 
+> TL;DR：先解决 `known_hosts`（Host key verification failed），再解决 SSH key 授权（Permission denied publickey）。容器环境建议用 **base64 私钥注入 + 显式 ssh config（IdentitiesOnly）**。
+>
+> 风险与注意事项：
+> - 不要把 `GITHUB_SSH_TOKEN`/私钥写入仓库或日志；避免在群里明文发送。
+> - `ssh-keyscan` 写入的 host key 适合自动化，但仍要留意被劫持风险（必要时 pin 指纹）。
+> - 多 key 场景务必 `IdentitiesOnly yes`，否则会“试错”多个 key 导致鉴权失败或触发风控。
+
 ## 背景
 在将文档 push 到 `origin openclaw` 时，遇到 git push 失败。
 

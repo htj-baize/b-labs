@@ -1,4 +1,11 @@
-# Git Push（OpenClaw 容器）问题记录与解决方案
+# Git Push（OpenClaw 容器）Deploy Key Runbook
+
+> TL;DR：在容器里 `git push` 最稳的方式是 **Deploy Key（允许写） + base64 私钥注入 + ssh-keyscan 生成 known_hosts**。
+>
+> 风险与注意事项：
+> - **不要把私钥/Token 写进仓库**；只用环境变量/密钥管理注入。
+> - 不建议关闭 `StrictHostKeyChecking`（除非你明确接受风险）。
+> - Deploy Key 记得勾选 **Allow write access**，否则只能读不能推。
 
 场景：OpenClaw 运行在容器中，需要从容器内 `git push` 到 GitHub（SSH remote）。
 
